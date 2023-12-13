@@ -1,9 +1,20 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { useRef, useState } from 'react';
 
-//q: this file is a hook
+interface DataTableColumn {
+  title: string;
+  dataIndex: string;
+  key: string;
+  render?: (value: string, record: Record<string, string>) => React.ReactNode;
+}
 
-export default function useResponsiveTable(dataTableColumns, items) {
+interface ResponsiveTableHookResult {
+  tableColumns: DataTableColumn[];
+  expandedRowData: string[]; // Replace 'any' with the actual type if known
+  tableHeader: React.MutableRefObject<HTMLElement | null>;
+}
+
+export default function useResponsiveTable(dataTableColumns, items):ResponsiveTableHookResult {
   // this hook returns two arays of columns
   // one for mobile and one for desktop
 
@@ -29,8 +40,8 @@ export default function useResponsiveTable(dataTableColumns, items) {
 
   const checkTableWidth = (width) => {
     // this function checks the width of the table
-    const tableWidth = document.querySelector('.ant-table-thead').offsetWidth;
-    if (width < tableWidth) {
+    const tableWidth = document.querySelector('.ant-table-thead')as HTMLElement | null 
+    if (width < tableWidth.offsetWidth) {
       setHeaderWidth(width);
       shrinkTable();
       return;

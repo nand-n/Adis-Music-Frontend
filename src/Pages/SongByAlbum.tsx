@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchSongsPerAlbum } from '../Store/Songs/songAction';
-import { Dispatch } from 'redux';
 import SongBy from '../Components/SongBy/SongBy';
 
-
 interface Song {
+  _id:string,
   title: string;
   artist: string;
   album: string;
@@ -28,14 +27,12 @@ interface RootState {
 interface SongByAlbumProps {
   songsPerAlbum: Album[];
   pending: boolean;
-  error: string; 
   fetchSongsPerAlbum: () => void;
 }
 
 function SongByAlbum({
   songsPerAlbum,
   pending,
-  error,
   fetchSongsPerAlbum,
 }: SongByAlbumProps) {
   useEffect(() => {
@@ -56,8 +53,15 @@ function SongByAlbum({
 
   return (
     <div className='min-h-screen bg-gray-50 p-4 overflow-x-scroll'>
-        <div className="font-semibold mb-6 ml-2">List of Albums</div>
-      <SongBy pending={pending} activeKey={activeKey} columns={columns} data={songsPerAlbum} handlePanelChange={handlePanelChange} titleKey={'albumTitle'} />
+      <div className="font-semibold mb-6 ml-2">List of Albums</div>
+      <SongBy
+        pending={pending}
+        activeKey={activeKey}
+        columns={columns}
+        data={songsPerAlbum}
+        handlePanelChange={handlePanelChange}
+        titleKey={'albumTitle'}
+      />
     </div>
   );
 }
@@ -68,7 +72,7 @@ const mapStateToProps = (state: RootState) => ({
   error: state.songReducer.error,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchSongsPerAlbum: () => dispatch(fetchSongsPerAlbum()),
 });
 

@@ -1,26 +1,53 @@
-import {  Dropdown, Table } from 'antd';
-import { EllipsisOutlined, EyeOutlined, FilePdfOutlined } from '@ant-design/icons';
+import { Dropdown, Table } from 'antd';
+import { EllipsisOutlined, EyeOutlined } from '@ant-design/icons';
 import useResponsiveTable from '../../Hooks/useResponsiveTables';
+import React, { useRef } from 'react';
+import { ColumnGroupType } from 'antd/es/table';
 
-export default function RecentTable({  dataTableColumns ,datas } ,) {
+interface EntityData {
+  _id: string;
+  result?: number;
+  isLoading: boolean;
+  entity: string;
+  title: string;
+}
 
+interface DataTableColumn {
+  title: string;
+  dataIndex: string;
+  key: string;
+  render?: (value: string, record: EntityData, index: number) => React.ReactNode;
+}
+
+interface DataTableProps {
+  datas: {
+    result: EntityData[];
+    isLoading: boolean;
+    isSuccess: boolean;
+  };
+  dataTableColumns: DataTableColumn[];
+  entity: string;
+}
+
+const RecentTable: React.FC<DataTableProps> = ({ dataTableColumns, datas }) => {
   const items = [
     {
       label: 'Show',
       key: 'read',
       icon: <EyeOutlined />,
     },
-   
   ];
-  const handleRead = (record) => {
+
+  const handleRead = (record: EntityData) => {
+    console.log(record);
   };
 
-
-  dataTableColumns = [
+  const newDataTableColumns: (DataTableColumn | ColumnGroupType<EntityData>)[] = [
     ...dataTableColumns,
     {
       title: '',
       key: 'action',
+      dataIndex: 'action', // Add this line with a dataIndex
       render: (_, record) => (
         <Dropdown
           menu={{
@@ -29,9 +56,6 @@ export default function RecentTable({  dataTableColumns ,datas } ,) {
               switch (key) {
                 case 'read':
                   handleRead(record);
-                  break;
-                case 'download':
-                  handleDownload(record);
                   break;
 
                 default:
@@ -49,27 +73,30 @@ export default function RecentTable({  dataTableColumns ,datas } ,) {
       ),
     },
   ];
-console.log(datas ,"datasdatasdatas");
-  const { result, isLoading, isSuccess } = datas
+
+  console.log(datas, 'datasdatasdatas');
+
+  const { result, isLoading, isSuccess } = datas;
+
   const firstFiveItems = () => {
     if (isSuccess && result) return result.slice(0, 5);
     return [];
   };
 
-  const { tableColumns, tableHeader } = useResponsiveTable(
-    dataTableColumns,
-    firstFiveItems()
-  );
+  const tableHeader = useRef<HTMLDivElement>(null);
+
+  const { tableColumns } = useResponsiveTable(newDataTableColumns, firstFiveItems());
 
   return (
     <div ref={tableHeader}>
-       <Table
-        columns={tableColumns}
+      <Table<EntityData>
+        columns={tableColumns as [] as (DataTableColumn)[]}
         rowKey={(item) => item._id}
         dataSource={isSuccess && result}
-        pagination={true}
         loading={isLoading}
       />
     </div>
   );
-}
+};
+
+export default RecentTable;

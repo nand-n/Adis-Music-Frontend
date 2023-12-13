@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { fetchSongsPerAlbum, fetchSongsPerArtist } from '../Store/Songs/songAction';
 import { Dispatch } from 'redux';
@@ -5,10 +7,7 @@ import { connect } from 'react-redux';
 import SongBy from '../Components/SongBy/SongBy';
 
 interface Song {
-    title: string;
-    artist: string;
-    album: string;
-    genre: string;
+  _id:string
   }
   
   interface Artist {
@@ -67,7 +66,7 @@ const mapStateToProps = (state: RootState) => ({
     error: state.songReducer.error,
   });
   
-  const mapDispatchToProps = (dispatch: Dispatch) => ({
+  const mapDispatchToProps = (dispatch) => ({
     fetchSongsPerArtist: () => dispatch(fetchSongsPerArtist()),
   });
   

@@ -8,15 +8,13 @@ interface Song {
 }
 
 interface DataItem {
-  title: string;
   songs: Song[];
-  // Define other properties in your data objects
 }
 
 interface SongByProps {
   data: DataItem[];
   activeKey: string[] | number;
-  handlePanelChange: (keys: string[] | number[]) =>()=> void;
+handlePanelChange: (key: string | string[]) => void;
   columns: { title: string; dataIndex: string; key: string }[]; 
   titleKey: string; 
   pending:boolean

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import songReducer from './Songs/songReducer'; // Import your reducer
 
 const rootReducer = combineReducers({
-    songReducer:songReducer
+    songReducer
 });
-
+export type RootReducerState = ReturnType<typeof rootReducer>;
 export default rootReducer;

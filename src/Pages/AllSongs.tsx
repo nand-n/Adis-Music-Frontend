@@ -1,14 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Table, Button, Form, Popconfirm, Input } from 'antd';
-import { DeleteFilled, EditFilled, PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Dispatch } from 'redux';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import React, { useEffect, useState } from 'react';
+import { Table, Button, Form, Popconfirm } from 'antd';
+import { DeleteFilled, EditFilled, PlusOutlined } from "@ant-design/icons";
 import { deleteSong, fetchSongsRequest, postSong, updateSong } from '../Store/Songs/songAction';
 import { connect } from 'react-redux';
-import Highlighter from 'react-highlight-words';
 import UpdateSongsModal from '../Components/Modals/UpdateSongsModal';
 import PostSongsModal from '../Components/Modals/PostSongsModal';
 
-const AllSongs = ({
+interface Song {
+  _id: string;
+  title: string;
+  genre: string;
+  album: string;
+  artist: string;
+}
+
+interface AllSongsProps {
+  songs: Song[];
+  pending: boolean;
+  error: string;
+  postSong: (value: object) => void;
+  updateSong: (id: string, value: object) => void;
+  deleteSong: (id: string) => void;
+  fetchSongsRequest: () => void;
+}
+
+const AllSongs: React.FC<AllSongsProps> = ({
   songs,
   pending,
   error,
@@ -17,9 +35,8 @@ const AllSongs = ({
   deleteSong,
   fetchSongsRequest
 }) => {
-  const [data, setData] = useState(songs);
-  const [searchText, setSearchText] = useState('');
-
+  const [data, setData] = useState<Song[]>(songs);
+  
   useEffect(() => {
     fetchSongsRequest();
   }, []);
@@ -28,53 +45,22 @@ const AllSongs = ({
     setData(songs);
   }, [songs]);
 
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<Song | null>(null);
 
   const [form] = Form.useForm();
 
   const columns = [
     { title: 'ID', dataIndex: '_id', key: '_id' },
-    { title: 'Title', dataIndex: 'title', key: 'title',
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            placeholder="Search Title"
-            value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => confirm()}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => clearFilters()} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </div>
-      ),
-      filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-      onFilter: (value, record) => record.title.toLowerCase().includes(value.toLowerCase()),
-      onFilterDropdownVisibleChange: (visible) => {
-        if (visible) {
-          setTimeout(() => searchInput.select());
-        }
-      },
-      render: (text) => (searchText ? <Highlighter searchWords={[searchText]} textToHighlight={text} /> : text),
-    },
+    { title: 'Title', dataIndex: 'title', key: 'title', },
     { title: 'Genre', dataIndex: 'genre', key: 'genre' },
     { title: 'Album', dataIndex: 'album', key: 'album' },
     { title: 'Artist', dataIndex: 'artist', key: 'artist' },
     {
       title: 'Action',
       key: 'action',
-      render: (_: undefined, record: object) => (
+      render: (_: undefined, record: Song) => (
         <span className="flex items-center gap-2 justify-start">
           <div onClick={() => showUpdateModal(record)}><EditFilled /></div>
           <span> | </span>
@@ -109,7 +95,7 @@ const AllSongs = ({
       });
   };
 
-  const showUpdateModal = (record) => {
+  const showUpdateModal = (record: Song) => {
     setUpdateModalVisible(true);
     setSelectedItem(record);
 
@@ -125,7 +111,7 @@ const AllSongs = ({
     form
       .validateFields()
       .then((values) => {
-        updateSong(selectedItem?._id, values);
+        updateSong(selectedItem?._id || '', values);
       })
       .catch((errorInfo) => {
         console.log('Validation failed:', errorInfo);
@@ -135,7 +121,7 @@ const AllSongs = ({
       })
   };
 
-  const confirmDelete = (itemId) => {
+  const confirmDelete = (itemId: string) => {
     deleteSong(itemId);
   };
 
@@ -145,19 +131,10 @@ const AllSongs = ({
     showSizeChanger: false,
   };
 
-  const searchInput = useRef();
-
   return (
     <div className='min-h-screen bg-gray-50 p-4 sm:overflow-x-scroll'>
       <div className="flex justify-between items-center pb-4">
         <div className="flex">
-          {/* Filter */}
-          <Input
-            ref={searchInput}
-            placeholder="Search"
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200, marginRight: 8 }}
-          />
         </div>
         <Button className='flex justify-center items-center bg-[#3498db] text-[#ffffff] border-[#3498db] hover:bg-[#2980b9] hover:border-[#2980b9] hover:text-blue-400' type="primary" onClick={showAddModal}>
           <PlusOutlined />
@@ -176,16 +153,6 @@ const AllSongs = ({
               return filters[key].includes(String(record[key]));
             })
           );
-
-          const searchedData = filteredData.filter(
-            (record) =>
-              record.title.toLowerCase().includes(searchText.toLowerCase()) ||
-              record.genre.toLowerCase().includes(searchText.toLowerCase()) ||
-              record.album.toLowerCase().includes(searchText.toLowerCase()) ||
-              record.artist.toLowerCase().includes(searchText.toLowerCase())
-          );
-
-          setData(searchedData);
         }}
       />
       <PostSongsModal addModalVisible={addModalVisible} form={form}
@@ -198,13 +165,13 @@ const AllSongs = ({
   );
 };
 
-const mapStateToProps = (state: object) => ({
+const mapStateToProps = (state) => ({
   songs: state.songReducer.songs,
   pending: state.songReducer.pending,
   error: state.songReducer.error,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   postSong: (value: object) => dispatch(postSong(value)),
   updateSong: (id: string, value: object) => dispatch(updateSong(id, value)),
   deleteSong: (id: string) => dispatch(deleteSong(id)),

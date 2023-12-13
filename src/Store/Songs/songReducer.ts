@@ -106,7 +106,7 @@ const deleteSongSuccess =(state:typeof initialState , action) =>({
     songs:action.payload.songs
 })
 
-const deleteSongFailure =(state:typeof initialState , action:object)=>{
+const deleteSongFailure =(state:typeof initialState , action)=>{
  return {   ...state,
     pending:false,
     error:action.payload.error

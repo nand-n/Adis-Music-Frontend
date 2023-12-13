@@ -1,10 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { connect } from "react-redux";
 import SummaryCard from "../Components/Cards/SummeryCard";
 import { fetchSongRequest, fetchSongStatistics, fetchSongsRequest } from "../Store/Songs/songAction";
 import { Dispatch } from "redux";
 import { useEffect } from "react";
-import { Col, Row, Tag } from "antd";
+import { Col, Row } from "antd";
 import RecentTable from "../Components/Tables";
+interface EntityData {
+  _id: string
+  result?: number;
+  isLoading: boolean;
+  entity: string;
+  title: string;
+}
+
+interface DataTableColumn {
+  title: string;
+  dataIndex: string;
+  key: string;
+}
+
+interface DashboardProps {
+  statistics: {
+    totalSongs?: number;
+    totalAlbums?: number;
+    totalArtists?: number;
+    totalGenres?: number;
+    songsPerArtist?: EntityData[];
+    songsPerGenre?: EntityData[];
+    songsPerAlbum?: EntityData[];
+  };
+  pending: boolean;
+  error: string; // Replace 'unknown' with a more specific type if available
+  fetchSongsRequest: () => void;
+  fetchSongStatistics: () => void;
+}
+
 
 function Dashboard({
 statistics,
@@ -12,7 +43,7 @@ pending,
 error,
 fetchSongsRequest,
 fetchSongStatistics
-}) {
+}:DashboardProps) {
 
   useEffect(()=>{
     fetchSongsRequest()
@@ -20,7 +51,7 @@ fetchSongStatistics
   },[])
   
 
-  const dataTableColumns = [
+  const dataTableColumns:DataTableColumn[] = [
     {
       title: 'Name',
       dataIndex: '_id',
@@ -90,12 +121,13 @@ fetchSongStatistics
             </h3>
 
             <RecentTable datas={{
-               result:statistics?.songsPerArtist,
+               result:statistics?.songsPerArtist ,
                isLoading:pending,
                isSuccess:!pending
               }} entity={'songs'} dataTableColumns={dataTableColumns} />
-          </div>
+          </div>IntrinsicAttributes
         </Col>
+
 
         <Col className="gutter-row w-full" sm={{ span: 24 }} lg={{ span: 12 }}>
           <div className="whiteBox shadow p-[20px]" style={{ height: '100%' }}>
@@ -134,7 +166,15 @@ fetchSongStatistics
 }
 
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state :
+   { songReducer: {
+      songs: object[];
+      song: object;
+      statistics: object;
+      pending: boolean;
+      error: string;
+    }
+  }) => ({
   songs: state.songReducer.songs,
   song:state.songReducer.song,
   statistics:state.songReducer.statistics,
@@ -142,7 +182,7 @@ const mapStateToProps = (state) => ({
   error: state.songReducer.error,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) =>({
+const mapDispatchToProps = (dispatch) =>({
   fetchSongsRequest:()=>dispatch(fetchSongsRequest()),
   fetchSongRequest:(id:string)=>dispatch(fetchSongRequest(id)),
   fetchSongStatistics:()=>dispatch(fetchSongStatistics())
