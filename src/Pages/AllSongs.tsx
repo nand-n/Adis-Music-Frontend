@@ -148,7 +148,7 @@ const AllSongs = ({
   const searchInput = useRef();
 
   return (
-    <div className='min-h-screen bg-gray-50 p-4 overflow-x-scroll'>
+    <div className='min-h-screen bg-gray-50 p-4 sm:overflow-x-scroll'>
       <div className="flex justify-between items-center pb-4">
         <div className="flex">
           {/* Filter */}

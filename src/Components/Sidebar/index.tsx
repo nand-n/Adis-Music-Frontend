@@ -59,7 +59,7 @@ const [isNavMenuClose, setIsNavMenuClose] = useState(true);
     {
       key: 'songbygenere',
       icon: <StrikethroughOutlined />,
-      label: <Link to={'/songbyalbum'}>Song By Genre</Link>,
+      label: <Link to={'/songbygenre'}>Song By Genre</Link>,
     },
   ];
 

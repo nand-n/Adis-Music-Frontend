@@ -4,6 +4,9 @@ export interface SongsState {
     pending:boolean;
     songs:[];
     song:object,
+    songsPerAlbum:[],
+songsPerArtist:[],
+songsPerGenre:[],
     statistics:object,
     error:string | null;
 }
@@ -67,7 +70,63 @@ export type FetchStatisticsFailure ={
     type:typeof songTypes.FETCH_SONGS_STATISTICS_FAILURE,
     payload:FetchStatisticsFaliurePayload
 }
-
+//FETCH SONGS PER ALBUM 
+export interface  FetchSongsPerAlbumPalyload {
+    songPerAlbum:object
+}
+export interface FetchSongsPerAlbumFailurePayload {
+    error:typeof songTypes.FETCH_SONGS_ALBUM_FAILURE
+}
+export interface FetchSongsPerAlbumRequest {
+    type:typeof songTypes.FETCH_SONGS_ALBUM_REQUEST
+}
+export type FetchSongAlbumSuccess ={
+    type:typeof songTypes.FETCH_SONGS_ALBUM_SUCCESS,
+    payload:FetchSongsPerAlbumPalyload
+}
+export type FetchSongsPerAlbumFailure ={
+    type:typeof songTypes.FETCH_SONGS_ALBUM_FAILURE,
+    payload:FetchSongsPerAlbumFailurePayload
+    
+}
+//FETCH SONGS PER ARTIST 
+export interface  FetchSongsPerArtistPalyload {
+    songsPerArtist:object
+}
+export interface FetchSongsPerArtistFailurePayload {
+    error:typeof songTypes.FETCH_SONGS_ARTIST_FAILURE
+}
+export interface FetchSongsPerArtistRequest {
+    type:typeof songTypes.FETCH_SONGS_ARTIST_REQUEST
+}
+export type FetchSongArtistSuccess ={
+    type:typeof songTypes.FETCH_SONGS_ARTIST_SUCCESS,
+    payload:FetchSongsPerArtistPalyload
+}
+export type FetchSongsPerArtistFailure ={
+    type:typeof songTypes.FETCH_SONGS_ARTIST_FAILURE,
+    payload:FetchSongsPerArtistFailurePayload
+    
+}
+//FETCH SONGS PER GENRE 
+export interface  FetchSongsPerGenrePalyload {
+    songsPerGenre:object
+}
+export interface FetchSongsPerGenreFailurePayload {
+    error:typeof songTypes.FETCH_SONGS_GENRE_FAILURE
+}
+export interface FetchSongsPerGenreRequest {
+    type:typeof songTypes.FETCH_SONGS_GENRE_REQUEST
+}
+export type FetchSongGenreSuccess ={
+    type:typeof songTypes.FETCH_SONGS_GENRE_SUCCESS,
+    payload:FetchSongsPerGenrePalyload
+}
+export type FetchSongsPerGenreFailure ={
+    type:typeof songTypes.FETCH_SONGS_GENRE_FAILURE,
+    payload:FetchSongsPerGenreFailurePayload
+    
+}
 //CREATE SONG
 export interface PostSongSuccessPayload {
     songs:object
@@ -148,4 +207,13 @@ export type SongsActions =
     | UpdateSongFailure
     | DeleteSongRequest
     | DeleteSongSuccess
-    | DeleteSongFailure;
+    | DeleteSongFailure
+    | FetchSongsPerAlbumRequest
+    | FetchSongAlbumSuccess
+    | FetchSongsPerAlbumFailure
+    | FetchSongsPerArtistRequest
+    | FetchSongArtistSuccess
+    | FetchSongsPerArtistFailure
+    | FetchSongsPerGenreRequest
+    | FetchSongGenreSuccess
+    | FetchSongsPerGenreFailure;

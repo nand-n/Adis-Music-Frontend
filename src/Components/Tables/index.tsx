@@ -10,16 +10,11 @@ export default function RecentTable({  dataTableColumns ,datas } ,) {
       key: 'read',
       icon: <EyeOutlined />,
     },
-    {
-      label: 'Download',
-      key: 'download',
-      icon: <FilePdfOutlined />,
-    },
+   
   ];
   const handleRead = (record) => {
   };
-  const handleDownload = (record) => {
-  };
+
 
   dataTableColumns = [
     ...dataTableColumns,

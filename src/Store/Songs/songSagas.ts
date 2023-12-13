@@ -1,7 +1,7 @@
 import axios from "axios";
 import { URL_BASE } from "../../Constants";
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
-import { DeleteSongFailure, PostSongFailure, deleteSongSuccess, fetchSongFailure, fetchSongStatisticsFailure, fetchSongStatisticsSuccess, fetchSongSuccess, fetchSongsFailure, fetchSongsSuccess, postSongSuccess, updateSongFailure, updateSongSuccess } from "./songAction";
+import { DeleteSongFailure, PostSongFailure, deleteSongSuccess, fetchSongFailure, fetchSongStatisticsFailure, fetchSongStatisticsSuccess, fetchSongSuccess, fetchSongsFailure, fetchSongsPerAlbumSuccess, fetchSongsPerArtistSuccess, fetchSongsPerGenreSuccess, fetchSongsSuccess, postSongSuccess, updateSongFailure, updateSongSuccess } from "./songAction";
 import { songTypes } from "./songActionTypes";
 import { toast } from "react-toastify";
 
@@ -23,6 +23,69 @@ function* fetchSongsSaga() {
             })
         )
         toast.error("Fetching Songs Error!")
+
+    }
+}
+//fetch api call for list of songs per album
+const getAlbumSongs = ()=> axios.get<[]>(`${URL_BASE}/song/songbyalbum`)
+
+function* fetchSongsPerAlbumSaga() {
+    try {
+        const response =  yield call(getAlbumSongs)
+        yield put(
+            fetchSongsPerAlbumSuccess({
+                songPerAlbum:response.data
+            })
+        )
+    } catch (e) {
+        yield put(
+            fetchSongsFailure({
+                error:e.message
+            })
+        )
+        toast.error("Fetching Songs Per Album Error!")
+
+    }
+}
+//fetch api call for list of songs per artist
+const getArtistSongs = ()=> axios.get<[]>(`${URL_BASE}/song/songbyartist`)
+
+function* fetchSongsPerArtistSaga() {
+    try {
+        const response =  yield call(getArtistSongs)
+        yield put(
+            fetchSongsPerArtistSuccess({
+                songsPerArtist:response.data
+            })
+        )
+    } catch (e) {
+        yield put(
+            fetchSongsFailure({
+                error:e.message
+            })
+        )
+        toast.error("Fetching Songs Per Artist Error!")
+
+    }
+}
+//fetch api call for list of songs per genre
+const getGenreSongs = ()=> axios.get<[]>(`${URL_BASE}/song/songbygenre`)
+
+function* fetchSongsPerGenreSaga() {
+    try {
+        const response =  yield call(getGenreSongs)
+        yield put(
+            fetchSongsPerGenreSuccess({
+                songsPerGenre:response.data
+            })
+        )
+    } catch (e) {
+        yield put(
+            fetchSongsFailure({
+                error:e.message
+            })
+        )
+        toast.error("Fetching Songs Per Fenre Error!")
 
     }
 }
@@ -133,7 +196,10 @@ function* songsSaga(){
         takeLatest(songTypes.FETCH_SONGS_STATISTICS_REQUEST , fetchSongStatistics),
         takeLatest(songTypes.POST_SONG_REQUEST , postSong),
         takeLatest(songTypes.DELETE_SONG_REQUEST , deleteSong),
-        takeLatest(songTypes.UPDATE_SONG_REQUEST , updateSong)
+        takeLatest(songTypes.UPDATE_SONG_REQUEST , updateSong),
+        takeLatest(songTypes.FETCH_SONGS_ALBUM_REQUEST ,  fetchSongsPerAlbumSaga),
+        takeLatest(songTypes.FETCH_SONGS_ARTIST_REQUEST ,  fetchSongsPerArtistSaga),
+        takeLatest(songTypes.FETCH_SONGS_GENRE_REQUEST ,  fetchSongsPerGenreSaga)
     ])
 }
 

@@ -5,6 +5,9 @@ const initialState :SongsState ={
     pending:false,
     songs:[],
     song:{},
+    songsPerAlbum:[],
+    songsPerArtist:[],
+    songsPerGenre:[],
     statistics:{},
     error:null
 }
@@ -104,14 +107,61 @@ const deleteSongSuccess =(state:typeof initialState , action) =>({
 })
 
 const deleteSongFailure =(state:typeof initialState , action:object)=>{
-    console.log(action.payload ,"action.payload")
  return {   ...state,
     pending:false,
-    error:action.payload
+    error:action.payload.error
  }
 }
 
-
+const fetchSongsPerAlbumPending =(state:typeof initialState)=>({
+    ...state,
+    pending:true
+})
+const fetchSongsPerAlbumSuccess =(state:typeof initialState , action)=>{
+    
+    console.log(action ,"Actions");
+    return {
+    ...state,
+    pending:false,
+    songsPerAlbum:action.payload.songPerAlbum,
+    error:null
+}
+}
+const fetchSongsPerAlbumFailure =(state:typeof initialState , action )=>({
+    ...state,
+    pending:false,
+    error:action.payload.error
+}) 
+const fetchSongsPerArtistPending =(state:typeof initialState)=>({
+    ...state,
+    pending:true
+})
+const fetchSongsPerArtistSuccess =(state:typeof initialState , action)=>({
+    ...state,
+    pending:false,
+    songsPerArtist:action.payload.songsPerArtist,
+    error:null
+})
+const fetchSongsPerArtistFailure =(state:typeof initialState , action )=>({
+    ...state,
+    pending:false,
+    error:action.payload.error
+}) 
+const fetchSongsPerGenrePending =(state:typeof initialState)=>({
+    ...state,
+    pending:true
+})
+const fetchSongsPerGenreSuccess =(state:typeof initialState , action)=>({
+    ...state,
+    pending:false,
+    songsPerGenre:action.payload.songsPerGenre,
+    error:null
+})
+const fetchSongsPerGenreFailure =(state:typeof initialState , action )=>({
+    ...state,
+    pending:false,
+    error:action.payload.error
+}) 
 export default (state = initialState , action:SongsActions) =>{
     switch (action.type){
         case songTypes.FETCH_SONGS_REQUEST:
@@ -150,6 +200,24 @@ export default (state = initialState , action:SongsActions) =>{
             return deleteSongSuccess(state,action)
         case songTypes.DELETE_SONG_FAILURE:
             return deleteSongFailure(state,action)
+        case songTypes.FETCH_SONGS_ALBUM_REQUEST:
+            return fetchSongsPerAlbumPending(state)
+        case songTypes.FETCH_SONGS_ALBUM_SUCCESS:
+            return fetchSongsPerAlbumSuccess(state,action)
+        case songTypes.FETCH_SONGS_ALBUM_FAILURE:
+            return fetchSongsPerAlbumFailure(state,action)
+        case songTypes.FETCH_SONGS_ARTIST_REQUEST:
+            return fetchSongsPerArtistPending(state)
+        case songTypes.FETCH_SONGS_ARTIST_SUCCESS:
+            return fetchSongsPerArtistSuccess(state , action)
+        case songTypes.FETCH_SONGS_ARTIST_FAILURE:
+            return fetchSongsPerArtistFailure(state , action)
+        case songTypes.FETCH_SONGS_GENRE_REQUEST:
+            return fetchSongsPerGenrePending(state)
+        case songTypes.FETCH_SONGS_GENRE_SUCCESS:
+            return fetchSongsPerGenreSuccess(state,action)
+        case songTypes.FETCH_SONGS_GENRE_FAILURE:
+            return fetchSongsPerGenreFailure(state,action)
         default :
             return state
     }

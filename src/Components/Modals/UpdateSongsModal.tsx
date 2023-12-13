@@ -6,9 +6,8 @@ function UpdateSongsModal(
     {
         updateModalVisible,
         setUpdateModalVisible,
-form,
-handleUpdate,
-    
+        form,
+        handleUpdate,
     }
 ) {
   return (
@@ -51,7 +50,7 @@ handleUpdate,
         ]}
       >
         <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
+          prefix={<UserOutlined className="" />}
           type="text"
           placeholder="Artist Name"
           size="large"
@@ -68,7 +67,7 @@ handleUpdate,
       >
         <Input
           type='text'
-          prefix={<AlibabaOutlined className="site-form-item-icon" />}
+          prefix={<AlibabaOutlined className="" />}
           placeholder="Album"
           size="large"
         />
@@ -84,7 +83,7 @@ handleUpdate,
       >
         <Input
           type='text'
-          prefix={<PlayCircleFilled className="site-form-item-icon" />}
+          prefix={<PlayCircleFilled className="" />}
           placeholder="Genre"
           size="large"
         />
