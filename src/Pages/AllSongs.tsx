@@ -29,7 +29,6 @@ interface AllSongsProps {
 const AllSongs: React.FC<AllSongsProps> = ({
   songs,
   pending,
-  error,
   postSong,
   updateSong,
   deleteSong,
@@ -133,35 +132,30 @@ const AllSongs: React.FC<AllSongsProps> = ({
 
   return (
     <div className='min-h-screen bg-gray-50 p-4 sm:overflow-x-scroll'>
+    <div className="container mx-auto">
       <div className="flex justify-between items-center pb-4">
-        <div className="flex">
+        <div className="font-semibold text-lg">
+          All Songs
         </div>
         <Button className='flex justify-center items-center bg-[#3498db] text-[#ffffff] border-[#3498db] hover:bg-[#2980b9] hover:border-[#2980b9] hover:text-blue-400' type="primary" onClick={showAddModal}>
           <PlusOutlined />
         </Button>
       </div>
-      <Table
-        columns={columns}
-        dataSource={data}
-        loading={pending}
-        rowKey="_id"
-        pagination={paginationConfig}
-        onChange={(pagination, filters, sorter, extra) => {
-          const filteredData = data.filter((record) =>
-            Object.keys(filters).every((key) => {
-              if (!filters[key] || filters[key].length === 0) return true;
-              return filters[key].includes(String(record[key]));
-            })
-          );
-        }}
-      />
-      <PostSongsModal addModalVisible={addModalVisible} form={form}
-        handleAdd={handleAdd}
-        setAddModalVisible={setAddModalVisible}
-      />
-
-      <UpdateSongsModal form={form} handleUpdate={handleUpdate} setUpdateModalVisible={setUpdateModalVisible} updateModalVisible={updateModalVisible}/>
     </div>
+    <Table
+      columns={columns}
+      dataSource={data}
+      loading={pending}
+      rowKey="_id"
+      pagination={paginationConfig}
+      scroll={{ x: true }}
+    />
+    <PostSongsModal addModalVisible={addModalVisible} form={form}
+      handleAdd={handleAdd}
+      setAddModalVisible={setAddModalVisible}
+    />
+    <UpdateSongsModal form={form} handleUpdate={handleUpdate} setUpdateModalVisible={setUpdateModalVisible} updateModalVisible={updateModalVisible}/>
+  </div>
   );
 };
 
